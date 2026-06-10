@@ -46,3 +46,21 @@ docs/
 ### Secrets ###
 src/main/resources/application.yml
 src/main/resources/application*.yml
+
+### Docker ###
+Dockerfile
+docker-compose.yml
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Env ###
+.env
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Env ###
+.env
