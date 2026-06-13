@@ -1,6 +1,6 @@
 package com.ludens.assignment.auth.presentation;
 
-import com.ludens.assignment.auth.application.AuthService;
+import com.ludens.assignment.auth.application.AuthApplicationService;
 import com.ludens.assignment.auth.presentation.dto.request.AuthRequest;
 import com.ludens.assignment.auth.presentation.dto.response.TokenResponse;
 import com.ludens.assignment.global.annotation.LoginMember;
@@ -19,21 +19,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthApplicationService authApplicationService;
 
     @PostMapping("/signup")
     public ResponseEntity<TokenResponse> signup(@Valid @RequestBody AuthRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(authService.signup(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(authApplicationService.signup(request));
     }
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@Valid @RequestBody AuthRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+        return ResponseEntity.ok(authApplicationService.login(request));
     }
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteMe(@LoginMember String userId) {
-        authService.deleteMe(userId);
+        authApplicationService.deleteMe(userId);
         return ResponseEntity.noContent().build();
     }
 }
