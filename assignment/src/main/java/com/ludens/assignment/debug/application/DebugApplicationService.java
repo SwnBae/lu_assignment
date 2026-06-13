@@ -10,9 +10,7 @@ import com.ludens.assignment.global.exception.ErrorCode;
 import com.ludens.assignment.post.domain.Post;
 import com.ludens.assignment.post.infrastructure.PostRepository;
 import com.ludens.assignment.post.presentation.dto.response.PostResponse;
-import com.ludens.assignment.user.application.UserService;
 import com.ludens.assignment.user.domain.User;
-import com.ludens.assignment.user.infrastructure.PostCountRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +24,6 @@ public class DebugApplicationService {
     private final DebugService debugService;
     private final ObjectMapper objectMapper;
     private final PostRepository postRepository;
-    private final PostCountRedisRepository postCountRedisRepository;
 
     public Map<String, String> getUserRaw(String username) {
         DebugUserDto dto = debugService.getUserRaw(username);

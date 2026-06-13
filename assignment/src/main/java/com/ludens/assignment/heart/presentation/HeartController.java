@@ -3,7 +3,6 @@ package com.ludens.assignment.heart.presentation;
 import com.ludens.assignment.global.annotation.LoginMember;
 import com.ludens.assignment.heart.application.HeartApplicationService;
 import com.ludens.assignment.heart.presentation.dto.response.HeartUsersPageResponse;
-import com.ludens.assignment.post.presentation.dto.response.PostPageResponse;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
