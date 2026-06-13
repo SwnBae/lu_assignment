@@ -4,6 +4,7 @@ import com.ludens.assignment.debug.application.dto.DebugPostDto;
 import com.ludens.assignment.debug.application.dto.DebugUserDto;
 import com.ludens.assignment.global.exception.BusinessException;
 import com.ludens.assignment.global.exception.ErrorCode;
+import com.ludens.assignment.post.application.dto.PostDto;
 import com.ludens.assignment.post.domain.Post;
 import com.ludens.assignment.post.infrastructure.PostRepository;
 import com.ludens.assignment.user.domain.User;
@@ -41,7 +42,9 @@ public class DebugService {
     }
 
     @Transactional(readOnly = true)
-    public List<Post> getAllPostsWithAuthor() {
-        return postRepository.findAllWithAuthor();
+    public List<PostDto> getAllPostDtos() {
+        return postRepository.findAllWithAuthor().stream()
+                .map(PostDto::from)
+                .toList();
     }
 }
