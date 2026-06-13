@@ -3,12 +3,19 @@ package com.ludens.assignment.global.exception;
 import com.ludens.assignment.global.common.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSourceResolvable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.stream.Collectors;
 
@@ -39,6 +46,29 @@ public class GlobalExceptionHandler {
                 .map(MessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(", "));
         return buildValidationResponse(message);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
+        ErrorCode errorCode = ErrorCode.INVALID_INPUT;
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(new ErrorResponse(errorCode.getCode(), "파일 크기는 2MB를 초과할 수 없습니다."));
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResourceFoundException(NoResourceFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @ExceptionHandler({
+            MethodArgumentTypeMismatchException.class,
+            MissingServletRequestPartException.class,
+            MissingServletRequestParameterException.class,
+            HttpMessageNotReadableException.class
+    })
+    public ResponseEntity<ErrorResponse> handleBadRequestExceptions(Exception e) {
+        return buildValidationResponse(ErrorCode.INVALID_INPUT.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: assignment
+  jpa:
+    open-in-view: false
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+
+jwt:
+  secret: ${JWT_SECRET:ludens-secret-key-for-jwt-signing-256bit}
+  expiration: 1440
+
+image:
+  storage-path: ${IMAGE_STORAGE_PATH:/data/images}

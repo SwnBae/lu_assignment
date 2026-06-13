@@ -8,6 +8,13 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
+    // Post
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "존재하지 않는 포스트입니다."),
+
+    // Heart
+    ALREADY_HEARTED(HttpStatus.CONFLICT, "H001", "이미 하트한 포스트입니다."),
+    NOT_HEARTED(HttpStatus.NOT_FOUND, "H002", "하트하지 않은 포스트입니다."),
+
     // User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "존재하지 않는 유저입니다."),
     USERNAME_ALREADY_EXISTS(HttpStatus.CONFLICT, "U002", "이미 사용 중인 username입니다."),

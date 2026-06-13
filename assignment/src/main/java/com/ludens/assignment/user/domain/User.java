@@ -7,13 +7,18 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@BatchSize(size = 50)
 @Table(name = "users")
 public class User extends BaseEntity {
 
@@ -32,7 +37,6 @@ public class User extends BaseEntity {
 
     private LocalDateTime deletedAt;
 
-    protected User() {}
 
     private User(String id, String username, String password, MemberRole role) {
         this.id = id;
