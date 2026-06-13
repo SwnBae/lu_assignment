@@ -3,8 +3,8 @@ package com.ludens.assignment.global.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ludens.assignment.global.common.ErrorResponse;
 import com.ludens.assignment.global.exception.ErrorCode;
-import com.ludens.assignment.global.security.JwtAuthenticationFilter;
-import com.ludens.assignment.global.security.TokenProvider;
+import com.ludens.assignment.auth.security.JwtAuthenticationFilter;
+import com.ludens.assignment.auth.security.TokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -75,7 +75,7 @@ public class SecurityConfig {
 
     private void handleForbidden(HttpServletRequest request, HttpServletResponse response,
             AccessDeniedException e) throws IOException {
-        writeJsonResponse(response, HttpServletResponse.SC_FORBIDDEN, ErrorCode.UNAUTHORIZED);
+        writeJsonResponse(response, HttpServletResponse.SC_FORBIDDEN, ErrorCode.FORBIDDEN);
     }
 
     private void writeJsonResponse(HttpServletResponse response, int status, ErrorCode errorCode)

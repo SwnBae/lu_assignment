@@ -1,4 +1,4 @@
-package com.ludens.assignment.global.security;
+package com.ludens.assignment.auth.security;
 
 import com.ludens.assignment.user.domain.MemberRole;
 import lombok.Getter;

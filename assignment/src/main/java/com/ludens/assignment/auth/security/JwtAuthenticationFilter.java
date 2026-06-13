@@ -1,6 +1,6 @@
-package com.ludens.assignment.global.security;
+package com.ludens.assignment.auth.security;
 
-import com.ludens.assignment.global.exception.AuthException;
+import com.ludens.assignment.auth.exception.AuthException;
 import com.ludens.assignment.user.domain.MemberRole;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;

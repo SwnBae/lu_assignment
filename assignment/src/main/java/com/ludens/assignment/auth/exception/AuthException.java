@@ -1,4 +1,7 @@
-package com.ludens.assignment.global.exception;
+package com.ludens.assignment.auth.exception;
+
+import com.ludens.assignment.global.exception.BusinessException;
+import com.ludens.assignment.global.exception.ErrorCode;
 
 public class AuthException extends BusinessException {
 
