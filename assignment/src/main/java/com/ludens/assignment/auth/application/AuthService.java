@@ -3,6 +3,7 @@ package com.ludens.assignment.auth.application;
 import com.ludens.assignment.auth.presentation.dto.request.AuthRequest;
 import com.ludens.assignment.auth.presentation.dto.response.TokenResponse;
 import com.ludens.assignment.auth.security.TokenProvider;
+import com.ludens.assignment.heart.infrastructure.PostLikeRepository;
 import com.ludens.assignment.user.domain.User;
 import com.ludens.assignment.user.exception.UserException;
 import com.ludens.assignment.user.infrastructure.UserRepository;
@@ -11,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -18,6 +21,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final PostLikeRepository postLikeRepository;
 
     @Transactional
     public TokenResponse signup(AuthRequest request) {
@@ -40,9 +44,12 @@ public class AuthService {
     }
 
     @Transactional
-    public void deleteMe(String userId) {
+    public List<Long> deleteMe(String userId) {
         User user = userRepository.findByIdAndDeletedAtIsNull(userId)
                 .orElseThrow(UserException::notFound);
+        List<Long> affectedPostIds = postLikeRepository.findPostIdsByUserId(userId);
+        postLikeRepository.deleteByUserId(userId);
         user.softDelete();
+        return affectedPostIds;
     }
 }
