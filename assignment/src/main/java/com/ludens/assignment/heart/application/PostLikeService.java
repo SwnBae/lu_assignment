@@ -3,6 +3,7 @@ package com.ludens.assignment.heart.application;
 import com.ludens.assignment.heart.domain.PostLike;
 import com.ludens.assignment.heart.exception.HeartException;
 import com.ludens.assignment.heart.infrastructure.PostLikeRepository;
+import com.ludens.assignment.post.application.dto.PostDto;
 import com.ludens.assignment.post.exception.PostException;
 import com.ludens.assignment.post.infrastructure.PostRepository;
 import com.ludens.assignment.user.infrastructure.UserRepository;
@@ -56,7 +57,8 @@ public class PostLikeService {
     }
 
     @Transactional(readOnly = true)
-    public Page<PostLike> getUserHearts(String userId, Pageable pageable) {
-        return postLikeRepository.findByUserIdWithPost(userId, pageable);
+    public Page<PostDto> getUserHearts(String userId, Pageable pageable) {
+        Page<PostLike> page = postLikeRepository.findByUserIdWithPost(userId, pageable);
+        return page.map(pl -> PostDto.from(pl.getPost()));
     }
 }

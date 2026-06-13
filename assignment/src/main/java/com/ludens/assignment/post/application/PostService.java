@@ -1,5 +1,6 @@
 package com.ludens.assignment.post.application;
 
+import com.ludens.assignment.post.application.dto.PostDto;
 import com.ludens.assignment.post.domain.Post;
 import com.ludens.assignment.post.exception.PostException;
 import com.ludens.assignment.post.infrastructure.PostRepository;
@@ -27,8 +28,9 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public Post findByIdWithAuthor(Long postId) {
+    public PostDto findByIdWithAuthor(Long postId) {
         return postRepository.findByIdWithAuthor(postId)
+                .map(PostDto::from)
                 .orElseThrow(PostException::notFound);
     }
 
@@ -54,18 +56,22 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Post> findByAuthor(String authorId, Pageable pageable) {
-        return postRepository.findByAuthorWithAuthor(authorId, pageable);
+    public Page<PostDto> findByAuthor(String authorId, Pageable pageable) {
+        return postRepository.findByAuthorWithAuthor(authorId, pageable)
+                .map(PostDto::from);
     }
 
     @Transactional(readOnly = true)
-    public Page<Post> search(String q, Pageable pageable) {
-        return postRepository.searchPosts(q, pageable);
+    public Page<PostDto> search(String q, Pageable pageable) {
+        return postRepository.searchPosts(q, pageable)
+                .map(PostDto::from);
     }
 
     @Transactional(readOnly = true)
-    public List<Post> findRecommended(int limit) {
-        return postRepository.findRecommended(limit);
+    public List<PostDto> findRecommended(int limit) {
+        return postRepository.findRecommended(limit).stream()
+                .map(PostDto::from)
+                .toList();
     }
 
     @Transactional(readOnly = true)

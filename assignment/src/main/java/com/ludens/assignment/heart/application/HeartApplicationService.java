@@ -5,12 +5,16 @@ import com.ludens.assignment.global.exception.ErrorCode;
 import com.ludens.assignment.heart.domain.PostLike;
 import com.ludens.assignment.heart.infrastructure.HeartCountRedisRepository;
 import com.ludens.assignment.heart.presentation.dto.response.HeartUsersPageResponse;
+import com.ludens.assignment.post.application.dto.PostDto;
 import com.ludens.assignment.post.presentation.dto.response.PostPageResponse;
 import com.ludens.assignment.user.application.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -42,12 +46,10 @@ public class HeartApplicationService {
         if (!user.getId().equals(loginUserId)) {
             throw new BusinessException(ErrorCode.FORBIDDEN);
         }
-        Page<PostLike> postLikePage = postLikeService.getUserHearts(
+        Page<PostDto> dtoPage = postLikeService.getUserHearts(
                 user.getId(), PageRequest.of(page - 1, limit));
-        var postIds = postLikePage.getContent().stream()
-                .map(pl -> pl.getPost().getId())
-                .toList();
-        var heartCounts = heartQueryService.getHeartCounts(postIds);
-        return PostPageResponse.ofHearted(postLikePage, heartCounts, page);
+        List<Long> postIds = dtoPage.getContent().stream().map(PostDto::id).toList();
+        Map<Long, Long> heartCounts = heartQueryService.getHeartCounts(postIds);
+        return PostPageResponse.ofHearted(dtoPage, heartCounts, page);
     }
 }

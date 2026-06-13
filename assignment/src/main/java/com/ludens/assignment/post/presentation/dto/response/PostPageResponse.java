@@ -1,7 +1,6 @@
 package com.ludens.assignment.post.presentation.dto.response;
 
-import com.ludens.assignment.heart.domain.PostLike;
-import com.ludens.assignment.post.domain.Post;
+import com.ludens.assignment.post.application.dto.PostDto;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -14,27 +13,27 @@ public record PostPageResponse(
         long total,
         List<PostResponse> posts
 ) {
-    public static PostPageResponse of(Page<Post> postPage, Map<Long, Long> heartCounts,
+    public static PostPageResponse of(Page<PostDto> dtoPage, Map<Long, Long> heartCounts,
                                       Set<Long> heartedIds, int page) {
-        List<PostResponse> posts = postPage.getContent().stream()
-                .map(post -> PostResponse.of(
-                        post,
-                        heartCounts.getOrDefault(post.getId(), 0L),
-                        heartedIds.contains(post.getId())
+        List<PostResponse> posts = dtoPage.getContent().stream()
+                .map(dto -> PostResponse.of(
+                        dto,
+                        heartCounts.getOrDefault(dto.id(), 0L),
+                        heartedIds.contains(dto.id())
                 ))
                 .toList();
-        return new PostPageResponse(page, postPage.getSize(), postPage.getTotalElements(), posts);
+        return new PostPageResponse(page, dtoPage.getSize(), dtoPage.getTotalElements(), posts);
     }
 
-    public static PostPageResponse ofHearted(Page<PostLike> postLikePage,
+    public static PostPageResponse ofHearted(Page<PostDto> dtoPage,
                                               Map<Long, Long> heartCounts, int page) {
-        List<PostResponse> posts = postLikePage.getContent().stream()
-                .map(pl -> PostResponse.of(
-                        pl.getPost(),
-                        heartCounts.getOrDefault(pl.getPost().getId(), 0L),
+        List<PostResponse> posts = dtoPage.getContent().stream()
+                .map(dto -> PostResponse.of(
+                        dto,
+                        heartCounts.getOrDefault(dto.id(), 0L),
                         true
                 ))
                 .toList();
-        return new PostPageResponse(page, postLikePage.getSize(), postLikePage.getTotalElements(), posts);
+        return new PostPageResponse(page, dtoPage.getSize(), dtoPage.getTotalElements(), posts);
     }
 }

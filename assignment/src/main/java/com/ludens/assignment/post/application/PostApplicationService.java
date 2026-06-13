@@ -6,7 +6,7 @@ import com.ludens.assignment.global.exception.ErrorCode;
 import com.ludens.assignment.heart.application.HeartQueryService;
 import com.ludens.assignment.heart.infrastructure.HeartCountRedisRepository;
 import com.ludens.assignment.heart.infrastructure.PostLikeRepository;
-import com.ludens.assignment.post.domain.Post;
+import com.ludens.assignment.post.application.dto.PostDto;
 import com.ludens.assignment.post.presentation.dto.response.CreatePostResponse;
 import com.ludens.assignment.post.presentation.dto.response.PostPageResponse;
 import com.ludens.assignment.post.presentation.dto.response.PostResponse;
@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -87,46 +86,44 @@ public class PostApplicationService {
     }
 
     public PostResponse getPost(String loginUserId, Long postId) {
-        Post post = postService.findByIdWithAuthor(postId);
+        PostDto dto = postService.findByIdWithAuthor(postId);
         long heartCount = heartQueryService.getHeartCount(postId);
         boolean hearted = loginUserId != null
                 && postLikeRepository.existsByUserIdAndPostId(loginUserId, postId);
-        return PostResponse.of(post, heartCount, hearted);
+        return PostResponse.of(dto, heartCount, hearted);
     }
 
     public PostPageResponse getPostsByAuthor(String loginUserId, String username, int page,
                                               int limit) {
         var user = userService.findByUsername(username);
-        Pageable pageable = PageRequest.of(page - 1, limit);
-        Page<Post> postPage = postService.findByAuthor(user.getId(), pageable);
-        List<Long> postIds = postPage.getContent().stream().map(Post::getId).toList();
+        Page<PostDto> dtoPage = postService.findByAuthor(user.getId(), PageRequest.of(page - 1, limit));
+        List<Long> postIds = dtoPage.getContent().stream().map(PostDto::id).toList();
         Map<Long, Long> heartCounts = heartQueryService.getHeartCounts(postIds);
         Set<Long> heartedIds = heartQueryService.getHeartedPostIds(loginUserId, postIds);
-        return PostPageResponse.of(postPage, heartCounts, heartedIds, page);
+        return PostPageResponse.of(dtoPage, heartCounts, heartedIds, page);
     }
 
     public PostPageResponse searchPosts(String loginUserId, String q, int page, int limit) {
-        Pageable pageable = PageRequest.of(page - 1, limit);
-        Page<Post> postPage = postService.search(q == null ? "" : q, pageable);
-        List<Long> postIds = postPage.getContent().stream().map(Post::getId).toList();
+        Page<PostDto> dtoPage = postService.search(q == null ? "" : q, PageRequest.of(page - 1, limit));
+        List<Long> postIds = dtoPage.getContent().stream().map(PostDto::id).toList();
         Map<Long, Long> heartCounts = heartQueryService.getHeartCounts(postIds);
         Set<Long> heartedIds = heartQueryService.getHeartedPostIds(loginUserId, postIds);
-        return PostPageResponse.of(postPage, heartCounts, heartedIds, page);
+        return PostPageResponse.of(dtoPage, heartCounts, heartedIds, page);
     }
 
     public RecommendPostResponse getRecommended(String loginUserId, int limit) {
-        List<Post> posts = postService.findRecommended(limit);
+        List<PostDto> dtos = postService.findRecommended(limit);
         long total = postService.countAll();
-        List<Long> postIds = posts.stream().map(Post::getId).toList();
+        List<Long> postIds = dtos.stream().map(PostDto::id).toList();
         Map<Long, Long> heartCounts = heartQueryService.getHeartCounts(postIds);
         Set<Long> heartedIds = heartQueryService.getHeartedPostIds(loginUserId, postIds);
-        return RecommendPostResponse.of(posts, total, heartCounts, heartedIds);
+        return RecommendPostResponse.of(dtos, total, heartCounts, heartedIds);
     }
 
     public Path getImagePath(Long postId) {
-        Post post = postService.findByIdWithAuthor(postId);
-        if (post.getImagePath() == null) return null;
-        return resolveImagePath(post.getImagePath());
+        PostDto dto = postService.findByIdWithAuthor(postId);
+        if (dto.imagePath() == null) return null;
+        return resolveImagePath(dto.imagePath());
     }
 
     private void validatePng(MultipartFile file) {

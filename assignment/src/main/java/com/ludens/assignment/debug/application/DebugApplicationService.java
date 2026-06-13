@@ -7,7 +7,7 @@ import com.ludens.assignment.debug.application.dto.DebugUserDto;
 import com.ludens.assignment.debug.presentation.dto.DebugUserListItem;
 import com.ludens.assignment.global.exception.BusinessException;
 import com.ludens.assignment.global.exception.ErrorCode;
-import com.ludens.assignment.post.domain.Post;
+import com.ludens.assignment.post.application.dto.PostDto;
 import com.ludens.assignment.post.infrastructure.PostRepository;
 import com.ludens.assignment.post.presentation.dto.response.PostResponse;
 import com.ludens.assignment.user.domain.User;
@@ -44,9 +44,9 @@ public class DebugApplicationService {
     }
 
     public Map<String, List<PostResponse>> getAllPosts() {
-        List<Post> posts = debugService.getAllPostsWithAuthor();
-        List<PostResponse> items = posts.stream()
-                .map(post -> PostResponse.of(post, 0L, false))
+        List<PostDto> dtos = debugService.getAllPostDtos();
+        List<PostResponse> items = dtos.stream()
+                .map(dto -> PostResponse.of(dto, 0L, false))
                 .toList();
         return Map.of("posts", items);
     }
