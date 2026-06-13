@@ -2,7 +2,7 @@ package com.ludens.assignment.auth.application;
 
 import com.ludens.assignment.auth.presentation.dto.request.AuthRequest;
 import com.ludens.assignment.auth.presentation.dto.response.TokenResponse;
-import com.ludens.assignment.global.security.TokenProvider;
+import com.ludens.assignment.auth.security.TokenProvider;
 import com.ludens.assignment.user.domain.User;
 import com.ludens.assignment.user.exception.UserException;
 import com.ludens.assignment.user.infrastructure.UserRepository;

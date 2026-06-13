@@ -2,7 +2,7 @@ package com.ludens.assignment.global.annotation;
 
 import com.ludens.assignment.global.exception.BusinessException;
 import com.ludens.assignment.global.exception.ErrorCode;
-import com.ludens.assignment.global.security.CustomUserDetails;
+import com.ludens.assignment.auth.security.CustomUserDetails;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
