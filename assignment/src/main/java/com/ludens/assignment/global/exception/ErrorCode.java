@@ -25,6 +25,7 @@ public enum ErrorCode {
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "A002", "만료된 토큰입니다."),
 
     // Common
+    TOO_MANY_REQUESTS(HttpStatus.TOO_MANY_REQUESTS, "C005", "서버가 현재 과부하 상태입니다. 잠시 후 다시 시도해주세요."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "C001", "인증이 필요합니다."),
     FORBIDDEN(HttpStatus.FORBIDDEN, "C002", "접근 권한이 없습니다."),
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "C003", "잘못된 입력값입니다."),
